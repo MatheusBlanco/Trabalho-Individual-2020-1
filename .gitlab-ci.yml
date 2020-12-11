@@ -6,8 +6,8 @@
 test:
   stage: test
   script:
-    - sudo docker-compose -f api/docker-compose.yml up --build
-    - sudo docker exec -it api_web_1 bash
+    - docker-compose -f api/docker-compose.yml up --build
+    - docker exec -it api_web_1 bash
     - bundle exec rails test
 
 # test-job2:
