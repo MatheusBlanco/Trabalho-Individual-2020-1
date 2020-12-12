@@ -23,6 +23,10 @@ jobs:
   - cache:
     - npm
     - yarn
+  - before_script:
+    - docker build -t client ./client
+    - docker run client yarn run build
+
   - script:
     - docker run client yarn run test:unit
 
