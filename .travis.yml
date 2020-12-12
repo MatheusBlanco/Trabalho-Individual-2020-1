@@ -17,7 +17,14 @@ jobs:
     - yarn
   - script:
     - docker build -t client ./client
-    - docker run -p 8080:8080 client
+    - docker run client yarn run build
+
+  - stage: test_client
+  - cache:
+    - npm
+    - yarn
+  - script:
+    - docker run client yarn run test:unit
 
   - stage: build_api
   - cache: 
