@@ -29,5 +29,5 @@ jobs:
     - nvm install --lts
   - script:
     - docker-compose -f api/docker-compose.yml up --build -d
-    - docker-compose -f api/docker-compose.yml run rake web db:create
-    - docker-compose -f api/docker-compose.yml run rake web db:migrate
+    - docker-compose -f api/docker-compose.yml run web rake db:create
+    - docker-compose -f api/docker-compose.yml run web rake db:migrate
