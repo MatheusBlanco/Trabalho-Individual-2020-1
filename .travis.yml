@@ -28,4 +28,4 @@ jobs:
   - before_install:
     - nvm install --lts
   - script:
-    - sudo docker-compose -f api/docker-compose.yml
+    - sudo docker-compose -f api/docker-compose.yml up --build
