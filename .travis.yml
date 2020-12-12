@@ -28,6 +28,7 @@ jobs:
   - before_install:
     - nvm install --lts
   - before_script:
+    - gem install bundler rails rake
     - bundle install
     - yarn
     - bundle exec rake db:create
