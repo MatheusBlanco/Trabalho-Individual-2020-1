@@ -12,7 +12,7 @@ stages:
 
 jobs:
   - stage: build_client
-  - cache: 
+  - cache:
     - npm
     - yarn
   - script:
@@ -31,7 +31,7 @@ jobs:
     - docker run client yarn run test:unit
 
   - stage: build_api
-  - cache: 
+  - cache:
     - bundler
     - yarn
   - services:
@@ -42,3 +42,18 @@ jobs:
     - docker-compose -f api/docker-compose.yml up --build -d
     - docker-compose -f api/docker-compose.yml run web rake db:create
     - docker-compose -f api/docker-compose.yml run web rake db:migrate
+
+  - stage: test_api
+  - cache:
+    - bundler
+    - yarn
+  - services:
+    - postgresql
+  - before_install:
+    - nvm install --lts
+  - before_script:
+    - docker-compose -f api/docker-compose.yml up --build -d
+    - docker-compose -f api/docker-compose.yml run web rake db:create
+    - docker-compose -f api/docker-compose.yml run web rake db:migrate
+  - script:
+    - docker-compose -f api/docker-compose.yml run web bundle exec rails test
