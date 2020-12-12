@@ -1,25 +1,36 @@
 language: generic
-
-services:
-  - docker
+node_js:
+  - "14.15.1"
+ruby:
+  - "2.5.7"
 
 stages:
-  - build
-  - test
+  - build_api
+  - build_client
+  - test_api
+  - test_client
 
-# before_install:
-#   - docker-compose --vesion
-#   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-#   - chmod +x docker-compose
-#   - sudo mv docker-compose /usr/local/bin
-#   - docker-compose --vesion
+jobs:
+  - stage: build_client
+  - cache: 
+    - npm
+    - yarn
+  - script:
+    - docker build -t client ./client
+    - docker run -p 8080:8080 client ./client
 
-# jobs:
-#   - stage: build
-#   - script:
-#     - docker-compose up --build
-#     - docker build -t client ./client
-
-#   - stage: test
-#   - script:
-#     - docker-compose run --
+  - stage: build_api
+  - cache: 
+    - bundler
+    - yarn
+  - services:
+    - postgresql
+  - before_install:
+    - nvm install --lts
+  - before_script:
+    - bundle install
+    - yarn
+    - bundle exec rake db:create
+    - bundle exec rake db:migrate
+  - script:
+    - sudo docker-compose -f api/docker-compose.yml
