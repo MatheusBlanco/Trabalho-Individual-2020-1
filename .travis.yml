@@ -17,7 +17,7 @@ jobs:
     - yarn
   - script:
     - docker build -t client ./client
-    - docker run -p 8080:8080 client ./client
+    - docker run -p 8080:8080 client
 
   - stage: build_api
   - cache: 
@@ -28,4 +28,6 @@ jobs:
   - before_install:
     - nvm install --lts
   - script:
-    - sudo docker-compose -f api/docker-compose.yml up --build
+    - docker-compose -f api/docker-compose.yml up --build -d
+    - docker-compose -f api/docker-compose.yml run rake web db:create
+    - docker-compose -f api/docker-compose.yml run rake web db:migrate
