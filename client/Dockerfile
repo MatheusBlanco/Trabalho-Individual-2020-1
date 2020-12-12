@@ -1,13 +1,13 @@
-FROM node:latest
+FROM node:14.15.1
 
-RUN mkdir -p /vue-app
-WORKDIR /vue-app
+RUN mkdir -p /client
+WORKDIR /client
 
-COPY package.json /vue-app
-COPY yarn.lock /vue-app
+COPY package.json /client
+COPY yarn.lock /client
 
-RUN yarn
+RUN yarn install
 
-COPY . /vue-app
+COPY . /client
 
 CMD ["yarn", "dev"]

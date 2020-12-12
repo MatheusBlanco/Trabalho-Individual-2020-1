@@ -1,17 +1,18 @@
 FROM ruby:2.5.7
 
-RUN gem install bundler
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
+
+RUN mkdir /api
 
 WORKDIR /api
 
-COPY . /api
+ADD Gemfile /api
+ADD Gemfile.lock /api
+
+RUN gem install bundler rails rake
 
 RUN bundle install
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y yarn
-
-RUN yarn install --check-files
+ADD . /api
 
 CMD ["rails", "server", "-b", "0.0.0.0"]

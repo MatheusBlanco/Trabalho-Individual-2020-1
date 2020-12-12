@@ -1,0 +1,33 @@
+language: generic
+node_js:
+  - "14.15.1"
+ruby:
+  - "2.5.7"
+
+stages:
+  - api
+  - client
+
+jobs:
+  - stage: client
+  - cache:
+    - npm
+    - yarn
+  - script:
+    - docker build -t client ./client
+    - docker run client yarn run build
+    - docker run client yarn run test:unit
+
+  - stage: api
+  - cache:
+    - bundler
+    - yarn
+  - services:
+    - postgresql
+  - before_install:
+    - nvm install --lts
+  - script:
+    - docker-compose -f api/docker-compose.yml up --build -d
+    - docker-compose -f api/docker-compose.yml run web rake db:create
+    - docker-compose -f api/docker-compose.yml run web rake db:migrate
+    - docker-compose -f api/docker-compose.yml run web bundle exec rails test
