@@ -1,4 +1,25 @@
-language: ruby
-rvm:
-  - 2.2
-  - jruby
+language: generic
+
+services:
+  - docker
+
+stages:
+  - build
+  - test
+
+# before_install:
+#   - docker-compose --vesion
+#   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+#   - chmod +x docker-compose
+#   - sudo mv docker-compose /usr/local/bin
+#   - docker-compose --vesion
+
+# jobs:
+#   - stage: build
+#   - script:
+#     - docker-compose up --build
+#     - docker build -t client ./client
+
+#   - stage: test
+#   - script:
+#     - docker-compose run --
